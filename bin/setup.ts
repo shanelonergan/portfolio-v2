@@ -5,6 +5,8 @@ import os from 'os';
 import path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 
+require('dotenv').config();
+
 const ROOT_PATH = path.resolve();
 const CONFIG_FILE_PATH = path.resolve(ROOT_PATH, '.env');
 const CONFIG_PATH = path.resolve(ROOT_PATH, 'bin', 'contentful-config.json');
@@ -32,7 +34,7 @@ const MESSAGES = {
   done: `
     All set! You can now run:
       ${chalk.yellow('yarn start')}
-    
+
     to see it in action.`,
 };
 
@@ -55,13 +57,15 @@ const PROMPTS = {
 };
 
 export const setup = async () => {
-  console.log(MESSAGES.welcome);
+  // console.log(MESSAGES.welcome);
 
-  const spaceId = await prompt(PROMPTS.spaceId);
-  const deliveryToken = await prompt(PROMPTS.deliveryToken);
-  const managementToken = await prompt(PROMPTS.managementToken);
+  const spaceId = process.env.SPACE_ID;
+  const deliveryToken = process.env.DELIVERY_TOKEN;
+  const managementToken = process.env.MANAGEMENT_TOKEN;
 
-  console.log(MESSAGES.env);
+  console.log(spaceId, deliveryToken, managementToken)
+
+  // console.log(MESSAGES.env);
   const envData = [`SPACE_ID=${spaceId}`, `ACCESS_TOKEN=${deliveryToken}`];
   writeFileSync(CONFIG_FILE_PATH, envData.join(os.EOL));
 
